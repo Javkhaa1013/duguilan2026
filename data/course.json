@@ -1,0 +1,29 @@
+{
+  "name": "IT Lab",
+  "year": "2026–2027",
+  "school": "НЕБ-ын Гэгээ сургууль",
+  "teacher": "Т. Жавхлантөгс",
+  "grades": "5–7 анги",
+  "outcomes": [
+    { "id": "games", "title": "2–3 тоглоом", "sub": "Scratch · Roblox · Python", "categories": ["game"], "icon": "🎮", "color": "violet" },
+    { "id": "web", "title": "Бодит веб төсөл", "sub": "HTML · CSS · JavaScript · GitHub Pages", "categories": ["web"], "icon": "🌐", "color": "mint" },
+    { "id": "ai", "title": "AI бүтээлүүд", "sub": "1 комик · 2 видео · 1 анимац", "categories": ["comic", "video", "animation", "image", "music"], "icon": "🎨", "color": "coral" },
+    { "id": "portfolio", "title": "Хувийн портфолио", "sub": "Бүх бүтээлээ нэгтгэж танилцуулна", "categories": ["portfolio"], "icon": "🏆", "color": "gold" }
+  ],
+  "modules": [
+    { "id": "M1", "title": "AI ба бүтээлч ур чадвар", "titleEn": "AI & creative skills" },
+    { "id": "M2", "title": "Тоглоом хөгжүүлэлт", "titleEn": "Game development" },
+    { "id": "M3", "title": "Веб хөгжүүлэлт", "titleEn": "Web development" }
+  ],
+  "months": [
+    { "m": "IX", "module": "M1", "topic": "AI-н өнөөгийн хөгжил", "topicEn": "LLM, generative AI basics", "evidence": "AI-н тухай товч илтгэл, тэмдэглэл", "lessons": ["IX-01", "IX-02"] },
+    { "m": "X", "module": "M1", "topic": "AI-р дуу, дүрс, комик бүтээх", "topicEn": "Images, music and comics with AI", "evidence": "1 AI комик, 1–2 AI видео", "lessons": ["X-01", "X-02", "X-03", "X-04", "X-05", "X-06", "X-07", "X-08"] },
+    { "m": "XI", "module": "M1", "topic": "AI видео, анимац, эцсийн портфолио", "topicEn": "Video, animation, final portfolio", "evidence": "2 видео + 1 комик + 1 анимац", "lessons": [] },
+    { "m": "XII", "module": "M2", "topic": "Scratch — sprite, event, хөдөлгөөн", "topicEn": "Block code basics", "evidence": "1-р тоглоом: Scratch", "lessons": [] },
+    { "m": "I", "module": "M2", "topic": "Roblox Studio, Lua-ийн үндэс", "topicEn": "Roblox Studio & Lua", "evidence": "2-р тоглоом: Roblox түвшин", "lessons": [] },
+    { "m": "II", "module": "M2", "topic": "Python-р тоглоом (turtle / pygame)", "topicEn": "Games with Python", "evidence": "3-р тоглоом: Python", "lessons": [] },
+    { "m": "III", "module": "M3", "topic": "HTML, CSS — бүтэц, стиль", "topicEn": "HTML & CSS", "evidence": "Хувийн танилцуулах хуудас", "lessons": [] },
+    { "m": "IV", "module": "M3", "topic": "JavaScript — interactivity, DOM", "topicEn": "JavaScript & the DOM", "evidence": "Интерактив веб хуудас", "lessons": [] },
+    { "m": "V", "module": "M3", "topic": "Бодит төсөл, Git/GitHub", "topicEn": "Ship it with GitHub Pages", "evidence": "GitHub repository + Pages холбоос", "lessons": [] }
+  ]
+}
