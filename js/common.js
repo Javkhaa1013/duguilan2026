@@ -37,6 +37,15 @@ function h(tag, attrs, ...kids) {
   return e;
 }
 
+// Одоогийн сар (I…XII). ?month=X гэж URL-д өгвөл тэр сарыг харуулна (проектороор үзүүлэх, туршихад)
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+function currentMonth(course) {
+  const q = new URLSearchParams(location.search).get('month');
+  const key = q && ROMAN.includes(q.toUpperCase()) ? q.toUpperCase() : ROMAN[new Date().getMonth()];
+  return course.months.find((m) => m.m === key) || null;
+}
+function worksIn(works, cats) { return works.filter((w) => !w.example && cats.includes(w.category)); }
+
 function lessonById(lessons, id) { return lessons.find((l) => l.id === id); }
 
 function mediaFor(w, opts) {
@@ -44,9 +53,11 @@ function mediaFor(w, opts) {
   const src = encodeURI(w.file || '');
   if (w.type === 'image') return h('img', { src, alt: w.title, loading: 'lazy' });
   if (w.type === 'video') return h('video', { src: src + '#t=0.5', preload: 'metadata', muted: true, playsinline: true, controls: opts.controls });
-  if (w.type === 'audio') return opts.controls ? h('audio', { src, controls: true }) : h('span', { class: 'big' }, '🎵');
-  if (w.type === 'pdf') return h('span', { class: 'big' }, '📄');
-  return h('span', { class: 'big' }, TYPE_ICON[w.type] || CAT_ICON[w.category] || '🔗');
+  const big = (kind, emoji) => (window.fx ? window.fx.icon(kind, 76) : h('span', { class: 'big' }, emoji));
+  if (w.type === 'audio') return opts.controls ? h('audio', { src, controls: true }) : big('music', '🎵');
+  if (w.type === 'pdf') return big('book', '📄');
+  if (w.type === 'link') return big('web', '🔗');
+  return window.fx ? window.fx.catIcon(w.category, 76) : h('span', { class: 'big' }, TYPE_ICON[w.type] || CAT_ICON[w.category] || '🔗');
 }
 
 function openWork(w) {
@@ -83,6 +94,7 @@ function workCard(w, lessons) {
       h('div', { class: 'tags' },
         h('span', { class: 'tag' }, CATS[w.category] || w.category),
         w.example ? h('span', { class: 'tag ex' }, 'Жишээ') : null,
+        w.family ? h('span', { class: 'tag fam' }, '👨‍👩‍👧 Family time') : null,
         l ? h('span', { class: 'tag' }, l.id) : null)));
 }
 
@@ -100,14 +112,15 @@ async function getMe() {
 
 function renderChrome(active, me) {
   me = me || { admin: false };
-  const links = [['index.html', 'Нүүр', 'home'], ['index.html#lessons', 'Хичээлүүд', 'lessons'], ['gallery.html', 'Бүтээлийн галерей', 'gallery']];
+  const links = [['index.html', 'Нүүр', 'home'], ['index.html#lessons', 'Хичээлүүд', 'lessons'], ['family.html', 'Family time', 'family'], ['gallery.html', 'Бүтээлийн галерей', 'gallery']];
   if (me.admin) links.push(['admin.html', 'Бүтээл нэмэх', 'admin']);
-  const items = links.map(([href, label, key]) => h('a', { href, 'aria-current': key === active ? 'page' : null }, label));
+  const NAV_ICON = { home: 'star', lessons: 'book', family: 'heart', gallery: 'art', admin: 'pencil' };
+  const items = links.map(([href, label, key]) => h('a', { href, 'aria-current': key === active ? 'page' : null }, window.fx && NAV_ICON[key] ? window.fx.icon(NAV_ICON[key], 24) : null, label));
   if (me.admin) {
     items.push(h('a', { href: '#', onclick: async (e) => { e.preventDefault(); await fetch('api/logout', { method: 'POST' }); location.href = 'index.html'; } }, 'Гарах'));
   }
   document.body.prepend(h('header', { class: 'nav' }, h('div', { class: 'wrap' },
-    h('a', { class: 'brand', href: 'index.html' }, 'IT ', h('b', {}, 'Lab')),
+    h('a', { class: 'brand', href: 'index.html' }, h('span', { class: 'logo', 'aria-hidden': 'true' }), h('span', {}, 'IT ', h('b', {}, 'Lab'))),
     me.admin ? h('span', { class: 'badge' }, 'Багшийн горим') : null,
     h('nav', { 'aria-label': 'Үндсэн цэс' }, items))));
   document.body.append(h('footer', {}, h('div', { class: 'wrap' },

@@ -18,7 +18,8 @@
   document.title = l.title + ' — IT Lab';
   const mine = works.filter((w) => w.lesson === l.id);
   const examples = mine.filter((w) => w.example);
-  const students = mine.filter((w) => !w.example);
+  const students = mine.filter((w) => !w.example && !w.family);
+  const famWorks = mine.filter((w) => w.family && !w.example);
 
   // Нууц өгөгдөл (60 минутын төлөвлөгөө, слайд) — зөвхөн нэвтэрсэн багшид
   let priv = null;
@@ -35,11 +36,26 @@
 
   // "Энэ хичээлээр юу бүтээх вэ" — эхний хичээл дээр үзүүлэх гол хэсэг
   const makeBox = h('section', { class: 'wrap', style: 'margin-top:28px' }, h('div', { class: 'make' },
-    h('h2', {}, 'Энэ хичээлийн төгсгөлд чи юуг бүтээх вэ?'),
-    h('div', { class: 'what' }, l.make.label), h('p', {}, l.make.desc),
+    h('div', { class: 'make-top' }, window.fx ? window.fx.catIcon(l.make.category, 70) : null,
+      h('div', {}, h('h2', {}, 'Энэ хичээлийн төгсгөлд чи юуг бүтээх вэ?'), h('div', { class: 'what' }, l.make.label))),
+    h('p', {}, l.make.desc),
     examples.length
       ? h('div', { class: 'examples' }, examples.map((w) => workCard(w, lessons)))
       : h('div', { class: 'placeholder' }, me.admin ? 'Багшийн жишээ энд гарна. «Бүтээл нэмэх» хуудаснаас «багшийн жишээ» гэж тэмдэглэж оруулна.' : 'Багшийн жишээ удахгүй нэмэгдэнэ.')));
+
+  // Family time — тэр өдрийн хичээлээр гэр бүлээрээ хийх бүтээл
+  const f = l.family;
+  const famBox = f ? h('section', { class: 'wrap', id: 'family', style: 'margin-top:24px' }, h('div', { class: 'card famblock' },
+    h('div', { class: 'fam-top' }, window.fx ? window.fx.icon('heart', 62) : null,
+      h('div', {}, h('span', { class: 'pill' }, 'Family time · ' + f.minutes + ' минут'), h('h2', {}, f.title))),
+    h('p', {}, f.desc),
+    h('div', { class: 'two', style: 'margin-top:10px' },
+      h('div', {}, h('h3', {}, 'Хийх алхам'), h('ol', { class: 'steps' }, f.steps.map((s) => h('li', {}, s)))),
+      h('div', {}, h('h3', {}, 'Ярилцах асуулт'), h('p', { class: 'ask' }, '💬 ' + f.ask),
+        h('h3', { style: 'margin-top:16px' }, 'Багшдаа юу үзүүлэх вэ?'), h('p', { style: 'margin:0' }, '📤 ' + f.submit))),
+    famWorks.length
+      ? h('div', { style: 'margin-top:18px' }, h('h3', {}, 'Ирсэн бүтээлүүд (' + famWorks.length + ')'), h('div', { class: 'grid c4', style: 'margin-top:10px' }, famWorks.map((w) => workCard(w, lessons))))
+      : null)) : null;
 
   const goalsList = [h('h2', {}, 'Зорилго'),
     h('ol', { class: 'goals', style: 'list-style:none' }, l.goals.map((g, i) => h('li', { 'data-n': i + 1 }, g)))];
@@ -63,5 +79,6 @@
     prev ? h('a', { class: 'btn line', href: 'lesson.html?id=' + prev.id }, '← ' + prev.title) : h('span', {}),
     next ? h('a', { class: 'btn violet', href: 'lesson.html?id=' + next.id }, next.title + ' →') : h('span', {}));
 
-  root.replaceChildren(head, makeBox, two, gallery, pager);
+  root.replaceChildren(...[head, makeBox, famBox, two, gallery, pager].filter(Boolean));
+  if (location.hash) { const t = document.querySelector(location.hash); if (t) t.scrollIntoView(); }
 })();

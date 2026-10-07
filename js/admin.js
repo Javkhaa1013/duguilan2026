@@ -54,6 +54,7 @@
   const title = h('input', { type: 'text', name: 'title', maxlength: 90, required: true, placeholder: 'Жишээ: Говийн хайрт' });
   const note = h('textarea', { name: 'note', rows: 2, maxlength: 300, placeholder: 'Сонголттой: AI-г хаана ашигласан, ямар хэрэгсэл' });
   const example = h('input', { type: 'checkbox', name: 'example' });
+  const family = h('input', { type: 'checkbox', name: 'family' });
   const consent = h('input', { type: 'checkbox', name: 'consent' });
   const urlIn = h('input', { type: 'url', name: 'url', placeholder: 'https://...' });
   const fileIn = h('input', { type: 'file', hidden: true, accept: '.png,.jpg,.jpeg,.webp,.gif,.mp4,.webm,.mp3,.wav,.m4a,.pdf' });
@@ -86,11 +87,12 @@
     h('div', { class: 'tabs' }, tabFile, tabLink), fileBox, linkBox,
     h('label', {}, 'Тайлбар', note),
     h('label', { class: 'check' }, example, h('span', {}, 'Энэ бол ', h('b', {}, 'багшийн жишээ'), ' (хичээлийн «жилийн эцэст ингэж гарна» хэсэгт харагдана, сурагчийн нэр шаардахгүй)')),
+    h('label', { class: 'check' }, family, h('span', {}, 'Энэ бол ', h('b', {}, 'Family time'), '-ийн бүтээл (гэр бүлээрээ хийсэн)')),
     h('label', { class: 'check' }, consent, h('span', {}, 'Сурагчийн бүтээлийг сайтад байршуулахыг ', h('b', {}, 'эцэг эх нь зөвшөөрсөн'), ' (хүүхдийн зөвхөн нэрийг бич, овог, зураг, мэдээллийг бүү оруул)')),
     submit, msgBox);
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
-    const meta = { lesson: lessonSel.value, category: catSel.value, title: title.value, student: student.value, note: note.value, example: example.checked, consent: consent.checked };
+    const meta = { lesson: lessonSel.value, category: catSel.value, title: title.value, student: student.value, note: note.value, example: example.checked, family: family.checked, consent: consent.checked };
     if (!meta.title.trim()) return say('err', 'Бүтээлийн нэрээ бичнэ үү.');
     if (!meta.example && !meta.student.trim()) return say('err', 'Сурагчийн нэрээ бичнэ үү (эсвэл «багшийн жишээ» гэж тэмдэглэнэ үү).');
     if (!meta.example && !meta.consent) return say('err', 'Эцэг эхийн зөвшөөрлийг тэмдэглэнэ үү.');
@@ -99,7 +101,7 @@
       let r;
       if (mode === 'file') {
         if (!file) throw new Error('Файл сонгоогүй байна.');
-        const q = new URLSearchParams({ lesson: meta.lesson, category: meta.category, title: meta.title, student: meta.student, note: meta.note, example: meta.example ? '1' : '0', consent: meta.consent ? '1' : '0', filename: file.name });
+        const q = new URLSearchParams({ lesson: meta.lesson, category: meta.category, title: meta.title, student: meta.student, note: meta.note, example: meta.example ? '1' : '0', family: meta.family ? '1' : '0', consent: meta.consent ? '1' : '0', filename: file.name });
         r = await fetch('api/works?' + q, { method: 'POST', body: file });
       } else {
         meta.url = urlIn.value;
@@ -108,7 +110,7 @@
       const j = await r.json();
       if (!r.ok) throw new Error(j.error || 'Алдаа гарлаа');
       say('ok', '✓ «' + j.work.title + '» нэмэгдлээ. Галерейд шууд харагдана.');
-      title.value = ''; student.value = ''; note.value = ''; urlIn.value = ''; fileIn.value = ''; setFile(null);
+      family.checked = false; title.value = ''; student.value = ''; note.value = ''; urlIn.value = ''; fileIn.value = ''; setFile(null);
       await refreshList();
     } catch (e) { say('err', e.message); } finally { submit.disabled = false; }
   });

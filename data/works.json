@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "muxbcqdqgvam",
+    "type": "image",
+    "file": "works/IX-01_muxbcqdqgvam.png",
+    "date": "2026-10-06T23:32:13.846Z",
+    "lesson": "IX-01",
+    "student": "Temuulen",
+    "title": "Banana",
+    "category": "image",
+    "note": "",
+    "example": true,
+    "consent": true
+  }
+]
