@@ -102,6 +102,8 @@ function emptyBox(text) { return h('div', { class: 'empty' }, text); }
 
 // Багшийн төлөв: статик (интернэт) сайт дээр API байхгүй тул admin=false
 async function getMe() {
+  // Интернэт (GitHub Pages) дээр сервер байхгүй тул хүсэлт илгээхгүй — консолд 404 гарахгүй
+  if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return { admin: false, needsSetup: false, local: false };
   try {
     const r = await fetch('api/me', { cache: 'no-store' });
     if (!r.ok) return { admin: false, needsSetup: false, local: false };
