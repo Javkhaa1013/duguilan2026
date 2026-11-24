@@ -132,7 +132,11 @@
       "topic": "AI видео, анимац, эцсийн портфолио",
       "topicEn": "Video, animation, final portfolio",
       "evidence": "2 видео + 1 комик + 1 анимац",
-      "lessons": []
+      "lessons": [
+        "XI-01",
+        "XI-02",
+        "XI-03"
+      ]
     },
     {
       "m": "XII",
